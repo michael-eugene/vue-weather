@@ -1,0 +1,92 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+p.big-txt {
+  font-size: 3rem;
+}
+
+p.title-1 {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+html,
+body {
+  height: 100vh;
+  overflow: hidden;
+  color: white;
+  font-family: "Syne", sans-serif;
+}
+
+div#app {
+  height: inherit;
+  background: url("../img/bg.jpg");
+  background-position-y: bottom;
+  background-position-x: right;
+  background-size: cover;
+  transition: 0.4s;
+}
+div#app.night {
+  background-position-y: bottom;
+  background-position-x: right;
+  background-size: cover;
+}
+
+div.container#home {
+  height: inherit;
+  position: relative;
+  padding: 0 2em;
+  background: linear-gradient(to bottom, rgba(80, 80, 80, 0.1), rgba(0, 0, 0, 0.9));
+}
+div.container#home .weather-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer.footer {
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  top: 100%;
+  transform: translateY(-50px);
+  transition: 0.4s;
+}
+footer.footer .footer__top {
+  padding: 1em;
+  display: flex;
+  justify-content: flex-end;
+}
+footer.footer .footer__bottom .title-1 {
+  margin: 1em 0;
+}
+footer.footer .footer__bottom-search {
+  padding: 1em;
+}
+footer.footer .footer__bottom-search input {
+  width: 100%;
+  padding: 1em;
+  background: #dadada;
+  border-radius: 0.5em;
+  border: none;
+}
+footer.footer .footer__bottom-search input:focus {
+  outline: none;
+}
+footer.footer .footer__bottom-locations .location-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5em;
+}
+footer.footer.open {
+  top: 10%;
+  border-top-right-radius: 1em;
+  border-top-left-radius: 1em;
+}
