@@ -78,7 +78,6 @@ export default {
         .then((data) => {
           this.weather = data.data[0];
           this.description = data.data[0].weather.description;
-          console.log(this.weather);
         });
       // Add to recent serches
       let saved = {
@@ -104,7 +103,6 @@ export default {
       .then((data) => {
         this.weather = data.data[0];
         this.description = data.data[0].weather.description;
-        console.log(this.weather);
       });
     this.cityQuery = "";
   },
@@ -119,8 +117,6 @@ export default {
     });
 
     placesAutocomplete.on("change", (e) => {
-      // $address.textContent = e.suggestion.value;
-      console.log(e.suggestion);
       this.cityQuery = `${e.suggestion.name}, ${e.suggestion.countryCode}`;
       this.getWeather();
       this.cityQuery = "";
