@@ -1,5 +1,5 @@
 <template>
-  <div class="container" id="home">
+  <div class="container" id="home" :class="isDaylight ? '': 'night'">
     <div class="weather-wrap" v-show="typeof this.weather.weather != 'undefined'">
       <div class="location">
         <p>{{this.weather.ob_time}}</p>
@@ -10,12 +10,13 @@
         <p class="big-txt">{{Math.round(this.weather.temp) + '°'}}</p>
       </div>
     </div>
+    <div class="shade"></div>
 
     <!-- FOOTER -->
-    <footer class="footer" :class="isOpen ? 'open' : ''">
+    <footer class="footer" :class="isOpen ? '' : 'close'">
       <div class="footer__top">
-        <x-icon class="footer__top-button" @click="isOpen = !isOpen" v-if="isOpen"></x-icon>
-        <menu-icon class="footer__top-button" @click="isOpen = !isOpen" v-else></menu-icon>
+        <chevron-down-icon class="footer__top-button" @click="isOpen = !isOpen" v-if="isOpen"></chevron-down-icon>
+        <chevron-up-icon class="footer__top-button" @click="openMenu" v-else></chevron-up-icon>
       </div>
       <div class="footer__bottom">
         <div class="footer__bottom-search">
@@ -28,11 +29,6 @@
             placeholder="Enter a city..."
             v-model.lazy="this.cityQuery"
           />
-
-          <p>
-            Selected:
-            <strong id="address-value">none</strong>
-          </p>
         </div>
         <hr />
         <p class="title-1">Recent Searches</p>
@@ -43,7 +39,7 @@
               <p>{{saved.location}}</p>
             </div>
             <div class="temperature">
-              <p>{{saved.temperature}}­</p>
+              <p>{{saved.temp}}­</p>
             </div>
           </div>
         </div>
@@ -54,13 +50,13 @@
 
 <script>
 import places from "places.js";
-import {MenuIcon, XIcon} from 'vue-feather-icons'
+import { ChevronDownIcon, ChevronUpIcon } from "vue-feather-icons";
 
 export default {
   name: "Home",
   components: {
-    MenuIcon,
-    XIcon
+    ChevronDownIcon,
+    ChevronUpIcon,
   },
   data() {
     return {
@@ -69,20 +65,10 @@ export default {
       cityQuery: "Lagos, NG",
       weather: {},
       description: "",
-      isOpen: false,
+      isDaylight: true,
+      isOpen: true,
       cityAddress: "",
-      savedLocations: [
-        {
-          time: "time",
-          location: "location",
-          temperature: "temp",
-        },
-        {
-          time: "time",
-          location: "location",
-          temperature: "temp",
-        },
-      ],
+      savedLocations: [],
     };
   },
   methods: {
@@ -94,10 +80,25 @@ export default {
           this.description = data.data[0].weather.description;
           console.log(this.weather);
         });
+      // Add to recent serches
+      let saved = {
+        time: this.weather.ob_time,
+        location: this.weather.city_name + ", " + this.weather.country_code,
+        temp: Math.round(this.weather.temp) + "°",
+      };
+      if (this.savedLocations.length < 3) {
+        this.savedLocations.unshift(saved);
+      } else {
+        this.savedLocations.pop();
+        this.savedLocations.unshift(saved);
+      }
+    },
+    openMenu() {
+      this.isOpen = !this.isOpen;
+      this.cityQuery = "";
     },
   },
   created() {
-    // this.$store.methods.getWeather()
     fetch(`${this.base_url}${this.cityQuery}&key=${this.api_key}`)
       .then((res) => res.json())
       .then((data) => {
@@ -105,6 +106,7 @@ export default {
         this.description = data.data[0].weather.description;
         console.log(this.weather);
       });
+    this.cityQuery = "";
   },
   mounted() {
     let placesAutocomplete = places({
@@ -116,26 +118,17 @@ export default {
       aroundLatLngViaIP: false,
     });
 
-    var $address = document.querySelector("#address-value");
-
     placesAutocomplete.on("change", (e) => {
-      $address.textContent = e.suggestion.value;
+      // $address.textContent = e.suggestion.value;
       console.log(e.suggestion);
       this.cityQuery = `${e.suggestion.name}, ${e.suggestion.countryCode}`;
-      this.isOpen = false;
       this.getWeather();
+      this.cityQuery = "";
     });
 
     placesAutocomplete.on("clear", function () {
-      $address.textContent = "none";
+      this.cityQuery = "";
     });
-  },
-  watch: {
-    cityAddress: {
-      handler() {
-        this.getWeather();
-      },
-    },
   },
 };
 </script>
