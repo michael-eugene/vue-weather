@@ -207,7 +207,7 @@ export default {
         } else if (this.description === "Clear sky") {
           fCondition = "clear-day";
         } else if (
-          this.description === "Scattered clouds" ||
+          this.description === "Scattered Clouds" ||
           this.description === "Few clouds"
         ) {
           fCondition = "partly-cloudy-day";
