@@ -1,3 +1,5 @@
+@import './partials/colors.scss';
+
 *,
 *::before,
 *::after {
@@ -15,6 +17,10 @@ p.title-1 {
   font-weight: 500;
 }
 
+p.txt {
+  color: $white;
+}
+
 html,
 body {
   height: 100vh;
@@ -24,9 +30,7 @@ body {
 
 div#app {
   height: inherit;
-  background-position-y: bottom;
-  background-position-x: right;
-  background-size: cover;
+  background: $bg-card;
   transition: 0.4s;
 
   &.night {
@@ -43,23 +47,28 @@ div.container {
     padding: 0 2em;
     transition: 0.4s;
 
-    &.card {
-      padding: 2em 3em;
-
-      .shade {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.829);
-      }
-    }
-
     .weather-wrap {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 10vh 0 0 0;
+      min-height: 10vh;
+    }
+
+    & .weather-wrap.full {
+      height: 100%;
+      padding: 0;
+
+      .temperature {
+        .col1 {
+          .condition {
+            transform: translateY(30px);
+          }
+          .big-txt {
+            font-size: 12rem;
+          }
+        }
+      }
     }
   }
 }
@@ -69,14 +78,14 @@ footer.footer {
   z-index: 10;
   left: 0;
   right: 0;
-  top: 20%;
+  top: 30vh;
   transform: translateY(-50px);
   transition: 0.4s;
-  background: white;
-  border-top-right-radius: 1em;
-  border-top-left-radius: 1em;
+  border-top-right-radius: 2em;
+  border-top-left-radius: 2em;
   height: 100%;
-
+  background: $white;
+  
   .footer__top {
     padding: 1em;
     display: flex;

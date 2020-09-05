@@ -1,21 +1,38 @@
 <template>
-  <div class="container" id="home" :class="isDaylight ? '': 'night'">
-    <div class="weather-wrap" v-show="typeof this.weather.weather != 'undefined'">
-      <div class="location">
-        <p>{{this.weather.ob_time}}</p>
-        <p class="title-1">{{this.weather.city_name + ', '}}{{this.weather.country_code}}</p>
-        <p>{{ this.description }}</p>
+  <div class="container" id="home">
+    <div
+      class="weather-wrap"
+      :class="isFull ? 'full' : ''"
+      v-show="typeof this.weather.weather != 'undefined'"
+    >
+      <div class="location" v-if="!isFull">
+        <p class="txt">{{this.weather.ob_time}}</p>
+        <p class="title-1 txt">{{this.weather.city_name + ', '}}{{this.weather.country_code}}</p>
+        <p class="txt">{{ this.description }}</p>
       </div>
       <div class="temperature">
-        <p class="big-txt">{{Math.round(this.weather.temp) + '°'}}</p>
+        <div class="col1">
+          <skycon
+            :condition="fCondition"
+            color="white"
+            class="condition"
+            width="70"
+            height="70"
+            v-if="isFull"
+          ></skycon>
+          <p class="big-txt txt">{{Math.round(this.weather.temp) + '°'}}</p>
+        </div>
+        <div class="col2" v-if="isFull">
+          <p class="title-1 txt">{{this.weather.city_name + ', '}}{{this.weather.country_code}}</p>
+          <p class="txt">{{ this.description }}</p>
+        </div>
       </div>
     </div>
-    <div class="shade"></div>
 
     <!-- FOOTER -->
     <footer class="footer" :class="isOpen ? '' : 'close'">
       <div class="footer__top">
-        <chevron-down-icon class="footer__top-button" @click="isOpen = !isOpen" v-if="isOpen"></chevron-down-icon>
+        <chevron-down-icon class="footer__top-button" @click="closeMenu" v-if="isOpen"></chevron-down-icon>
         <chevron-up-icon class="footer__top-button" @click="openMenu" v-else></chevron-up-icon>
       </div>
       <div class="footer__bottom">
@@ -65,10 +82,11 @@ export default {
       cityQuery: "Lagos, NG",
       weather: {},
       description: "",
-      isDaylight: true,
-      isOpen: true,
+      fCondition: "",
+      isOpen: false,
       cityAddress: "",
       savedLocations: [],
+      isFull: true,
     };
   },
   methods: {
@@ -93,8 +111,13 @@ export default {
       }
     },
     openMenu() {
-      this.isOpen = !this.isOpen;
+      this.isOpen = true;
+      this.isFull = false;
       this.cityQuery = "";
+    },
+    closeMenu() {
+      this.isOpen = false;
+      this.isFull = true;
     },
   },
   created() {
@@ -120,11 +143,77 @@ export default {
       this.cityQuery = `${e.suggestion.name}, ${e.suggestion.countryCode}`;
       this.getWeather();
       this.cityQuery = "";
+      this.closeMenu();
     });
 
     placesAutocomplete.on("clear", function () {
       this.cityQuery = "";
     });
+  },
+  watch: {
+    description: {
+      handler() {
+        let fCondition;
+        if (this.description === "Unknown precipitation") {
+          fCondition = "";
+        } else if (
+          this.description === "Thunderstorm with light rain" ||
+          this.description === "Thunderstorm with heavy rain" ||
+          this.description === "Light drizzle" ||
+          this.description === "Light rain" ||
+          this.description === "Light shower rain" ||
+          this.description === "Heavy shower rain" ||
+          this.description === "Shower rain" ||
+          this.description === "Heavy rain" ||
+          this.description === "Moderate rain" ||
+          this.description === "Freezing rain" ||
+          this.description === "Heavy drizzle" ||
+          this.description === "Drizzle" ||
+          this.description === "Thunderstorm with heavy drizzle" ||
+          this.description === "Thunderstorm with drizzle" ||
+          this.description === "Thunderstorm with light drizzle" ||
+          this.description === "Thunderstorm with rain"
+        ) {
+          fCondition = "rain";
+        } else if (
+          this.description === "Overcast Clouds" ||
+          this.description === "Broken clouds"
+        ) {
+          fCondition = "cloudy";
+        } else if (
+          this.description === "Fog" ||
+          this.description === "Haze" ||
+          this.description === "Sand/dust" ||
+          this.description === "Smoke" ||
+          this.description === "Freezing fog" ||
+          this.description === "Mist"
+        ) {
+          fCondition = "fog";
+        } else if (
+          this.description === "Snow" ||
+          this.description === "Snow shower" ||
+          this.description === "Light snow" ||
+          this.description === "Heavy snow" ||
+          this.description === "Mix snow/Rain" ||
+          this.description === "Flurries"
+        ) {
+          fCondition = "snow";
+        } else if (
+          this.description === "Sleet" ||
+          this.description === "Heavy Sleet"
+        ) {
+          fCondition = "sleet";
+        } else if (this.description === "Clear sky") {
+          fCondition = "clear-day";
+        } else if (
+          this.description === "Scattered clouds" ||
+          this.description === "Few clouds"
+        ) {
+          fCondition = "partly-cloudy-day";
+        }
+        this.fCondition = fCondition;
+      },
+    },
   },
 };
 </script>
