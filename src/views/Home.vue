@@ -1,5 +1,6 @@
 <template>
   <div class="container" id="home">
+    <div class="shade"></div>
     <div
       class="weather-wrap"
       :class="isFull ? 'full' : ''"

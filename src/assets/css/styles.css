@@ -28,7 +28,10 @@ body {
 
 div#app {
   height: inherit;
-  background: #4a85e9;
+  background: url("../img/bg.jpg");
+  background-position-y: bottom;
+  background-position-x: right;
+  background-size: cover;
   transition: 0.4s;
 }
 div#app.night {
@@ -49,16 +52,27 @@ div.container#home .weather-wrap {
   align-items: center;
   padding: 10vh 0 0 0;
   min-height: 10vh;
+  position: relative;
+  z-index: 1;
+}
+div.container#home .shade {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.75));
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
 }
 div.container#home .weather-wrap.full {
-  height: 100%;
+  height: 90%;
   padding: 0;
 }
 div.container#home .weather-wrap.full .temperature .col1 .condition {
-  transform: translateY(30px);
+  transform: translateY(10px);
 }
 div.container#home .weather-wrap.full .temperature .col1 .big-txt {
-  font-size: 12rem;
+  font-size: 5rem;
 }
 
 footer.footer {
